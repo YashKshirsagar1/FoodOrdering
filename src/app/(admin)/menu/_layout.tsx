@@ -11,7 +11,7 @@ export default function Menu() {
         options={{
           title: "Menu",
           headerRight: () => (
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -27,7 +27,7 @@ export default function Menu() {
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="[id]"
         options={{
           title: "Menu",
@@ -47,7 +47,6 @@ export default function Menu() {
           ),
         }}
       />
-
     </Stack>
   );
 }
