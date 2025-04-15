@@ -4,7 +4,8 @@ import Colors from "@/constants/Colors";
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useInsertProduct } from "@/api/products";
 
 const CreateProductScreen = () => {
   const [name, setName] = useState("");
@@ -13,6 +14,10 @@ const CreateProductScreen = () => {
   const [image, setImage] = useState<string | null>(null);
   const { id } = useLocalSearchParams();
   const isUpdating = !!id;
+
+  const { mutate: insertProduct } = useInsertProduct();
+
+  const router = useRouter();
 
   const resetFields = () => {
     setName("");
@@ -51,7 +56,15 @@ const CreateProductScreen = () => {
     console.warn("Creating Product ", name);
 
     //Save in database
-    resetFields();
+    insertProduct(
+      { name, price: parseFloat(price), image },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const onUpdateCreate = () => {
@@ -122,7 +135,6 @@ const CreateProductScreen = () => {
         onChangeText={setPrice}
         placeholder="9.99"
         style={styles.input}
-        keyboardType="numeric"
       />
 
       <Text style={{ color: "red" }}>{errors}</Text>
